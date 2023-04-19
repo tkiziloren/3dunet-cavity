@@ -39,7 +39,10 @@ if __name__ == '__main__':
                 logger.error(f'Generation of grids from {name} failed. Recording failure and continuing', exc_info=True)
                 Path(f'{cache_folder}/failed').touch()
 
-    PdbDataHandler.map_datasets(loaders_config=run_config.loaders_config, pdb_workers=run_config.pdb_workers,
-                                features_config=features_config, transformer_config=config['transformer'],
-                                phases=[phase for phase in Phase], f=makeRawsLabels,
+    PdbDataHandler.map_datasets(loaders_config=run_config.loaders_config,
+                                pdb_workers=run_config.pdb_workers,
+                                features_config=features_config,
+                                transformer_config=config['transformer'],
+                                phases=[phase for phase in Phase],
+                                f=makeRawsLabels,
                                 generating_cache=True)

@@ -34,7 +34,7 @@ elec name prot
     temp 298.15
     calcenergy total
     calcforce no
-    write pot gz {grid_fname}
+    write pot dx {grid_fname}
 end"""
 
 
@@ -91,8 +91,8 @@ class ApbsGridCollection:
         self.delta = firstGrid.delta
         self.shape = next(iter(self.grids.values())).shape
 
-        assert labels.shape == self.orig_shape
-        self.labels = labels[:self.grid_size, :self.grid_size, :self.grid_size]
+        assert labels.grid.shape == self.orig_shape
+        self.labels = labels.grid[:self.grid_size, :self.grid_size, :self.grid_size]
 
     def __enter__(self):
         return self
@@ -167,7 +167,7 @@ class ApbsGridCollection:
             os.chdir(self.tmp_data_folder)
 
             with self.tmp_file("apbs-in") as apbs_in_fname:
-                grid_fname_in = '.'.join(str(Path(grid_fname).name).split('.')[:-2])
+                grid_fname_in = '.'.join(str(Path(grid_fname).name).split('.')[:-1])
                 input = apbsInput(pqr_fname=str(Path(pqr_output).name), grid_fname=grid_fname_in,
                                   grid_size=grid_size, dielec_const=dielec_const)
 
@@ -182,9 +182,20 @@ class ApbsGridCollection:
                 if proc.returncode != 0:
                     raise Exception(cmd_out[1].decode())
 
+            import gzip
+
+            print(grid_fname_in)
+            with open(f"{grid_fname_in}.dx", 'rb') as orig_file:
+                with gzip.open(f"{grid_fname_in}.dx.gz", 'wb') as zipped_file:
+                    zipped_file.writelines(orig_file)
+
+
+
             os.chdir(owd)
 
-        with self.generate_or_fromcache(f"grid_{dielec_const}.dx.gz", generate) as grid_fname:
+        with self.generate_or_fromcache(f"grid_{dielec_const}.dx", generate) as grid_fname:
+            print(dst_pdb_file)
+            print(grid_fname)
             grid = PotGrid(dst_pdb_file, grid_fname)
 
         return grid
@@ -203,6 +214,9 @@ class ApbsGridCollection:
             grids = self._runApbs(dst_pdb_file=dst_pdb_file, grid_size=grid_size, dielec_const_list=dielec_const_list)
 
         # ligand mask is a boolean NumPy array, can be converted to int: ligand_mask.astype(int)
-        ligand_mask = next(iter(grids.values())).get_ligand_mask(ligand, radius)
+        from MDAnalysis import Universe
+        ligand_universe = Universe(f"{self.cache_folder}/ligand.pdb")
+
+        ligand_mask = next(iter(grids.values())).get_atom_list_mask(ligand_universe, radius)
 
         return grids, ligand_mask

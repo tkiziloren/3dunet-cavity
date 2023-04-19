@@ -253,6 +253,14 @@ class ComposedTransform(Transform, ABC):
 
         self.dtype = dtype
         self.convert_to_torch = convert_to_torch
+        self.state = common_config, self.dtype, self.convert_to_torch, []
+
+        self.transformer_classes = transformer_classes
+        self.conf_options = conf_options
+        self.common_config = common_config
+        self.phase = phase
+        self.seed = seed
+
         self.transforms = []
 
         args = []
@@ -269,10 +277,13 @@ class ComposedTransform(Transform, ABC):
 
     # FIXME This is probably bugged if we pickle after calling the first time
     def __getstate__(self):
+        if self.state is None:
+            self.state = self.common_config, self.dtype, self.convert_to_torch, []
+
         return self.state
 
     def __setstate__(self, state):
-        # logger.warning(f'Pickling the {type(self).__name__} instance - This has not been properly tested')
+        logger.warning(f'Pickling the {type(self).__name__} instance - This has not been properly tested')
         self.transforms = []
         common_config, self.dtype, self.convert_to_torch, args = state
         for i, (cls, options_conf, phase, iseed) in enumerate(args):

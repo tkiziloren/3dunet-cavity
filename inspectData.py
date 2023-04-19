@@ -5,7 +5,7 @@ import numpy as np
 from multiprocessing import Pool
 import miniball
 
-folder = 'runs/gen_data/tmp'
+folder = 'runs/train/tmp'
 
 # name = os.listdir(folder)[0]
 

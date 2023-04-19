@@ -13,7 +13,7 @@ loaders_config = {
         'transformer': {'label': [], 'raw': []},
         'file_paths': ['/home/lorenzo/deep_apbs/srcData/pdbbind_v2019_refined/1ii5']
     },
-    'tmp_folder': 'runs/gen_data/tmp',
+    'tmp_folder': 'runs/train/tmp',
     'pdb2pqrPath': '/home/lorenzo/pymol/bin/pdb2pqr',
     'num_workers': 1
 }
@@ -23,7 +23,7 @@ def f(raws, labels):
 
 results = PdbDataHandler.map_datasets(loaders_config, phase='train', f=f)
 
-folder = 'runs/gen_data/tmp'
+folder = 'runs/train/tmp'
 name = '5jzi'
 
 struct_fname = f'{folder}/{name}/structure.pdb'

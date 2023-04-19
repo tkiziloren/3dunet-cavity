@@ -7,17 +7,14 @@ import yaml
 from pathlib import Path
 from pytorch3dunet.datasets.utils_pdb import PdbDataHandler
 from pytorch3dunet.unet3d.utils import get_logger
-from pytorch3dunet.unet3d.config import parse_args
-from pytorch3dunet.datasets.featurizer import ComposedFeatures, get_features
-
-
 from argparse import ArgumentParser
-import logging
 import os
 
 logger = get_logger('TrainingSetup')
 
 def load_config(runconfigPath, nworkers, device):
+
+    runconfig = yaml.safe_load(open(runconfigPath, 'r'))
 
     dataFolder = Path(runconfig['dataFolder'])
     runFolder = Path(runconfig.get('runFolder', Path(runconfigPath).parent))
@@ -48,12 +45,20 @@ def load_config(runconfigPath, nworkers, device):
 
 if __name__=='__main__':
 
+    parser = ArgumentParser()
+    parser.add_argument("-r", "--runconfig", dest='runconfig', type=str, required=True,
+                        help=f"The run config yaml file")
+    parser.add_argument("-n", "--numworkers", dest='numworkers', type=int, required=True,
+                        help=f"Number of workers")
+    parser.add_argument("-d", "--device", dest='device', type=str, required=False,
+                        help=f"Device")
 
-    args, config, runconfig = parse_args()
+    args = parser.parse_args()
+    runconfig = args.runconfig
+    nworkers = int(args.numworkers)
 
+    config = load_config(runconfig, nworkers, args.device)
     logger.debug(f'Read Config is: {config}')
-    features_config = config['featurizer']
-    features: ComposedFeatures = get_features(features_config)
 
     assert 'loaders' in config, 'Could not find data loaders configuration'
     loaders_config = config['loaders']
@@ -72,11 +77,7 @@ if __name__=='__main__':
         n = raws.flatten().shape[0]
         return raws.sum()/n, (raws**2).sum()/n
 
-    results = PdbDataHandler.map_datasets(loaders_config = loaders_config,
-                                          pdb_workers = pdb_workers,
-                                          features_config=runconfig.pdb_workers,
-                                          transformer_config=config['transformer'],
-                                          phases=['train'], f=f, generating_cache=False)
+    results = PdbDataHandler.map_datasets(loaders_config, phase='train', f=f)
     n = sum(1 for r in results)
     sums = sum(r[0] for r in results)
     sqsums = sum(r[1] for r in results)
@@ -84,5 +85,3 @@ if __name__=='__main__':
     mean = sums/n
     std = np.sqrt((sqsums - mean**2))/n
     print(mean, std)
-
-
