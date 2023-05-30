@@ -3,9 +3,9 @@ import shutil
 from tqdm import trange
 import argparse
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("src", help="Source PDB Dataset Location")
-parser.add_argument("dest", help="Destination PDB Dataset Location, where filtered items wil be stored.")
-parser.add_argument("filter_file_path", help="Path of the file that includes the name of the proteins to be filtered.")
+parser.add_argument("-src", help="Source PDB Dataset Location")
+parser.add_argument("-dest", help="Destination PDB Dataset Location, where filtered items wil be stored.")
+parser.add_argument("-filter_file_path", help="Path of the file that includes the name of the proteins to be filtered.")
 args = parser.parse_args()
 
 SRC_SC_PDB_PATH = args["src"]
