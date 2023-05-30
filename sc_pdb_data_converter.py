@@ -66,9 +66,3 @@ for item in trange(len(dir_names)):
         dst_file_path = os.path.join(dst_path, file_name)
         if os.path.exists(src_file_path) and not os.path.exists(dst_file_path):
             shutil.copyfile(src_file_path, dst_file_path)
-
-
-
-
-
-

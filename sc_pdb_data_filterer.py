@@ -18,8 +18,3 @@ with open(FILTER_FILE_PATH) as fp:
         line = lines[item]
         line = line.replace("\n", "")
         shutil.copytree(os.path.join(SRC_SC_PDB_PATH, line), os.path.join(DST_SC_PDB_PATH,line), dirs_exist_ok=True)
-
-
-
-
-
