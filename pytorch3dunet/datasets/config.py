@@ -49,10 +49,11 @@ class PdbDataConfig:
     reuse_grids: bool = False
     randomize_name: bool = False
     ligand_mask_radius: float = default_ligand_mask_radius
+    fail_on_error: bool = True
 
     def __init__(self, dataFolder: str, train: List[str], val: List[str], test: List[str],
                  pdb2pqrPath: str = None, reuse_grids: bool = None, randomize_name: bool = None,
-                 ligand_mask_radius: float = None, gridscache: Optional[str] = None):
+                 ligand_mask_radius: float = None, gridscache: Optional[str] = None, fail_on_error: bool = None):
 
         dataFolder = Path(dataFolder)
 
@@ -66,7 +67,7 @@ class PdbDataConfig:
         self.reuse_grids = default_if_none(reuse_grids, self.reuse_grids)
         self.randomize_name = default_if_none(randomize_name, self.randomize_name)
         self.ligand_mask_radius = default_if_none(ligand_mask_radius, self.ligand_mask_radius)
-
+        self.fail_on_error = default_if_none(fail_on_error, self.fail_on_error)
 
         for leftPhase, rightPhase in itertools.combinations(list(Phase), 2):
             left = self.data_paths[leftPhase]
