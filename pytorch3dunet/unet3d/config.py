@@ -15,12 +15,13 @@ def load_config(runconfigPath, nworkers: int, pdb_workers: int, max_gpus: int, d
     runFolder = Path(runconfig.get('runFolder', Path(runconfigPath).parent))
     train_config = runFolder / 'train_config.yml'
 
+
     config = yaml.safe_load(open(train_config, 'r'))
 
     from pytorch3dunet.datasets.config import RunConfig
     class_config = RunConfig(runFolder=runFolder, runconfig=runconfig, max_gpus=max_gpus, nworkers=nworkers,
                              pdb_workers=pdb_workers,
-                             loaders_config=config['loaders'], profile=profile)
+                             loaders_config=config['loaders'], profile=profile, fail_on_error=runconfig['fail_on_error'])
 
     logger = utils.get_logger('ConfigLoader')
     logger.info(f'Read config:\n{class_config.pretty_format()}')

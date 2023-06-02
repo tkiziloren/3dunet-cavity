@@ -53,6 +53,7 @@ class PdbDataConfig:
     def __init__(self, dataFolder: str, train: List[str], val: List[str], test: List[str],
                  pdb2pqrPath: str = None, reuse_grids: bool = None, randomize_name: bool = None,
                  ligand_mask_radius: float = None, gridscache: Optional[str] = None):
+
         dataFolder = Path(dataFolder)
 
         self.gridscache = gridscache
@@ -65,6 +66,7 @@ class PdbDataConfig:
         self.reuse_grids = default_if_none(reuse_grids, self.reuse_grids)
         self.randomize_name = default_if_none(randomize_name, self.randomize_name)
         self.ligand_mask_radius = default_if_none(ligand_mask_radius, self.ligand_mask_radius)
+
 
         for leftPhase, rightPhase in itertools.combinations(list(Phase), 2):
             left = self.data_paths[leftPhase]
@@ -141,11 +143,12 @@ class RunConfig:
     max_gpus: int = None
     dry_run: bool = False
     dump_inputs: bool = False
+    fail_on_error: bool = False
 
     def __init__(self, runFolder: Path, runconfig: Mapping,
                  nworkers: int, pdb_workers: int, max_gpus: int,
                  loaders_config: Mapping,
-                 profile: bool):
+                 profile: bool, fail_on_error: bool):
         runconfig = dict(runconfig)
         self.pdb_workers = pdb_workers
         self.max_gpus = max_gpus
@@ -155,6 +158,7 @@ class RunConfig:
         self.dump_inputs = runconfig.pop('dump_inputs', self.dump_inputs)
         self.loaders_config = LoadersConfig(runFolder, runconfig, nworkers, **loaders_config)
         self.profile = profile
+        self.fail_on_error = fail_on_error
 
     def pretty_format(self):
         return pprint.pformat(todict(self), indent=4)
