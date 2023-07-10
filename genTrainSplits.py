@@ -8,7 +8,7 @@ import shutil
 import re
 import random
 
-outputName = "run_config.yml"
+outputName = "run_config2.yml"
 
 if __name__=='__main__':
     parser = ArgumentParser()

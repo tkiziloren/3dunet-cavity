@@ -9,6 +9,10 @@ import numpy as np
 import torch
 from torch import optim
 from enum import Enum
+from prody import *
+from openbabel import pybel
+import io
+
 
 import builtins
 
@@ -435,3 +439,19 @@ def str2bool(v):
         return False
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
+
+
+def molecule_to_atom_group(molecule):
+    molecule_as_text = molecule.write("pdb")
+    f = io.StringIO(molecule_as_text)
+    atom_group = prody.parsePDBStream(f)
+    return atom_group
+
+
+def atomgroup_to_molecule(atom_group):
+    f = io.StringIO("")
+    prody.writePDBStream(f, atom_group)
+    molecule_as_text = f.getvalue()
+    molecule = pybel.readstring("pdb", molecule_as_text)
+    return molecule
+

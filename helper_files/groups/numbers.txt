@@ -1,0 +1,24 @@
+INFO:root:There are 5268 proteins with 1 chains:
+INFO:root:There are 3015 proteins with 2 chains:
+INFO:root:There are 470 proteins with 3 chains:
+INFO:root:There are 434 proteins with 4 chains:
+INFO:root:There are 65 proteins with 5 chains:
+INFO:root:There are 34 proteins with 6 chains:
+INFO:root:There are 13 proteins with 7 chains:
+INFO:root:There are 8 proteins with 8 chains:
+INFO:root:There are 4 proteins with 9 chains:
+INFO:root:There are 1 proteins with 10 chains:
+INFO:root:There are 4 proteins with 12 chains:
+
+2  - 150
+3  - 15
+4  - 15
+5  - 8
+6  - 5
+7  - 2
+8  - 2
+9  - 1
+10 - 1
+12 - 1
+
+
