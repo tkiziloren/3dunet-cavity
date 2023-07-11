@@ -34,6 +34,4 @@ def run():
     logging.info("Size of all:{}, problematic:{}, filtered:{}".format(len(all), len(problematic), len(filtered)))
 
 
-
-
 run()
