@@ -205,7 +205,6 @@ def intersection_over_lig(lig, pocket, resolution):
 
     return intersection_volume / lig_volume
 
-
 def coordinates(molecule):
     ligand_coords = [atom.coords for atom in molecule.atoms]
     return np.array(ligand_coords)
