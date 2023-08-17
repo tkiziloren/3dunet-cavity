@@ -441,13 +441,14 @@ def str2bool(v):
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
+# pybel molecule to prody atomgroup
 def molecule_to_atom_group(molecule):
     molecule_as_text = molecule.write("pdb")
     f = io.StringIO(molecule_as_text)
     atom_group = prody.parsePDBStream(f)
     return atom_group
 
-
+# prody atomgroup to pybel molecule
 def atomgroup_to_molecule(atom_group):
     f = io.StringIO("")
     prody.writePDBStream(f, atom_group)
