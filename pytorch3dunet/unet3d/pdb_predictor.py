@@ -43,7 +43,7 @@ def _allocate_prediction_maps(output_shape, output_heads):
 
 class PdbPredictor(_AbstractPredictorPdb):
     def __init__(self, model, output_dir, config, **kwargs):
-        self.saveh5 = kwargs.get('save_h5', False)
+        self.saveh5 = kwargs.get('save_h5', True)
 
         super().__init__(model, output_dir, config, **kwargs)
 
