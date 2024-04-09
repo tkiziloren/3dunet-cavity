@@ -12,7 +12,8 @@ handler.setLevel(logging.INFO)
 
 RUN_NAME = "scPDB_druggable_1600-200-200"
 RUNS_PATH = "../runs"
-SC_PDB_PATH = "/Volumes/Data/DiskYedek/DATA/src_data/scPDB_converted"
+SC_PDB_PATH = "/Volumes/Data/DiskYedek/DATA/caches/scPDB_filtered"
+
 
 
 # RUN_NAME = "scPDB_filtered800_100_100"
@@ -21,7 +22,7 @@ SC_PDB_PATH = "/Volumes/Data/DiskYedek/DATA/src_data/scPDB_converted"
 
 
 def find_dcc():
-    predictions_path = os.path.join(RUNS_PATH, RUN_NAME, "predictions")
+    predictions_path = os.path.join(RUNS_PATH, RUN_NAME, "predictions_old")
     predictions_path = Path(predictions_path)
     dir_names = [f for f in predictions_path.iterdir() if f.is_dir()]
     result = list()
@@ -30,7 +31,7 @@ def find_dcc():
         dir_path = dir_names[item]
         protein_name = os.path.basename(dir_path)
         prediction_path = os.path.join(dir_path, "pocket_pred.pdb")
-        pocket_path = os.path.join(SC_PDB_PATH, protein_name, protein_name + "_pocket.pdb")
+        pocket_path = os.path.join(SC_PDB_PATH, protein_name, "pocket.pdb")
         prediction = prody.parsePDB(prediction_path)
         pocket = prody.parsePDB(pocket_path)
         centre_prediction = prody.calcCenter(prediction)
@@ -44,7 +45,7 @@ def find_dcc():
             count_less_than_4 += 1
 
     dcc = 100 * (count_less_than_4 / len(result))
-    logging.info("Count of the predictions with distance less than 4 angstroms:{}, Count Total:{}, DCC:{}".format(count_less_than_4, len(result), dcc))
+    logging.info("Count of the predictions_old with distance less than 4 angstroms:{}, Count Total:{}, DCC:{}".format(count_less_than_4, len(result), dcc))
     return result
 
 
